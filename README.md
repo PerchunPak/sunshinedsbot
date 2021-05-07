@@ -4,7 +4,7 @@
 
 Мой первый проект, поэтому может содержать много ошибок
 
-## Installing
+## Установка
 
 1. **Установите Python 3.6 или выше**
 
@@ -14,11 +14,11 @@
 
 3. **Настроить виртуальную среду**
 
-Запустите `python3 -m venv <path to repository>`
+Используйте `python3 -m venv <path to repository>`
 
 4. **Попав в виртуальную среду, устанавливаем зависимости**
 
-Запустите `python3 -m pip install -U -r REQUIREMENTS.txt`
+Используйте `python3 -m pip install -U -r REQUIREMENTS.txt`
 
 5. **Создайте базу данных в формате PostGreSQL**
 
@@ -36,8 +36,8 @@
 
 **Важная Заметка 2**: Нет, я не собираюсь выпускать "ладно" считатель отдельным ботом, так как к нему не будет никакого интереса.
 
-## Credits
+## Большое спасибо
 
 "ладно" counter it is fork from https://github.com/NWordCounter/bot
 
-Большое спасибо [@WINGS07](https://github.com/WINGS07), [@Nikita244](https://github.com/Nikita244) и особенное спасибо моему брату [@JeffyOLOLO](https://github.com/JeffyOLOLO) за большую помощь в програмировании
+Большое спасибо [@WINGS07](https://github.com/WINGS07), [@Nikita244](https://github.com/Nikita244) и особенное спасибо моему брату [@JeffyOLOLO](https://github.com/JeffyOLOLO) за большую помощь в програмировании (да, я не знаю ни единого языка програмирования)
