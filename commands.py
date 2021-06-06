@@ -16,7 +16,7 @@ import asyncpg
 
 
 def find_color(ctx):
-    """Ищет цвет отрисовки бота. Если это цвет по умолчанию или мы находимся в ЛС, вернет "greyple", цвет Дискорда."""
+    """Ищет цвет отрисовки embed таблиц. Если это цвет по умолчанию или мы находимся в ЛС, вернет "greyple", цвет Дискорда."""
 
     try:
         if ctx.guild.me.color == discord.Color.default():
@@ -42,13 +42,12 @@ class Commands(commands.Cog):
 
         embed = discord.Embed(
             title="Команда помощи",
-            description="Я считаю каждый раз когда кто то говорит " + '"ладно"' + ". Я "
-                                                                                  "довольно простой бот в использовании. Мой префикс это @упоминание, имеется ввиду что Вам нужно "
-                                                                                  f"вставлять {self.bot.user.mention} перед каждой командой."
-                                                                                  "\n\nВот короткий список моих команд:",
-            color=find_color(ctx))
-        embed.set_footer(
-            text="Примечание: Нет, я не считаю слова перед тем как присоединился на сервер")
+            description="Я считаю каждый раз когда кто то говорит " + '"ладно"' + ". 
+                        "Я довольно простой бот в использовании. 
+                        "Мой префикс это @упоминание, имеется ввиду что Вам нужно 
+                        f"вставлять {self.bot.user.mention} перед каждой командой.
+                        "\n\nВот короткий список моих команд:", color=find_color(ctx))
+        embed.set_footer(text="Примечание: Нет, я не считаю слова перед тем как присоединился на сервер")
         for c in cmds:
             embed.add_field(name=c.name, value=c.help, inline=False)
 
@@ -63,11 +62,11 @@ class Commands(commands.Cog):
                                                   f"\n\n**ID**: {self.bot.app_info.id}", color=find_color(ctx))
 
         embed.set_thumbnail(url=self.bot.app_info.icon_url)
-        embed.add_field(name="Владелц", value=self.bot.app_info.owner)
+        embed.add_field(name="Владелец", value=self.bot.app_info.owner)
         embed.add_field(name="Количество серверов", value=len(self.bot.guilds))
         embed.add_field(name="Количество пользователей", value=len(self.bot.users))
         embed.add_field(
-            name="Язык програмирования",
+            name="Язык программирования",
             value=f"Python {sys.version_info[0]}.{sys.version_info[1]}.{sys.version_info[2]}")
         embed.add_field(
             name="Библиотека", value="[discord.py](https://github.com/Rapptz/discord.py)")
