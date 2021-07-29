@@ -14,7 +14,7 @@ import sys
 from random import randint
 
 
-def find_color(ctx): # TODO зачем такая сложная система определения лс?
+def find_color(ctx):
     """Ищет цвет отрисовки embed таблиц. Если это цвет по умолчанию или мы находимся в ЛС, вернет "greyple", цвет Дискорда."""
 
     try:
@@ -88,7 +88,7 @@ class Commands(commands.Cog):
         if user is None:
             user = ctx.author
         if user == self.bot.user:
-            return await ctx.send( # скорее всего оно не хотело работать с нормальным форматированием
+            return await ctx.send(  # скорее всего оно не хотело работать с нормальным форматированием
                 """@MATUKITE has said the N-word **1,070,855 times**,
 __1,070,801 of which had a hard-R__
 
@@ -100,7 +100,7 @@ They've said the N-word __23,737 times__ since they were last investigated
 
         try:
             count = self.bot.lwords[user.id]
-        except:
+        except Exception:  # оно возвращает айди пользователя указаного в команде
             return await ctx.send(f"{user.mention} еще ни разу не говорил " + '"ладно"' + ". Странный чел")
 
         if count["total"]:
@@ -254,90 +254,36 @@ They've said the N-word __23,737 times__ since they were last investigated
             return await ctx.send(exc)
 
     @commands.command(hidden=True)
-    @commands.is_owner() # TODO добавить распознавание пинга
-    async def edit(self, ctx, user_id: int, total: int, last_time: int = None):
+    @commands.is_owner()
+    async def edit(self, ctx, user: discord.User, total: int, last_time: int = None):
         """Отредактируйте запись пользователя в ДБ или добавьте новую"""
-        totalBefore = self.bot.lwords[user_id]['total']
+        user = user.id
+        totalBefore = self.bot.lwords[user]['total']
         if total < totalBefore:
-            self.bot.lwords[0]["total"] -= (totalBefore - (self.bot.lwords[user_id]['total']))
+            self.bot.lwords[0]["total"] -= (totalBefore - (self.bot.lwords[user]['total']))
             if last_time:
-                self.bot.lwords[user_id] = {"id": user_id, "total": total, "last_time": last_time}
+                self.bot.lwords[user] = {"id": user, "total": total, "last_time": last_time}
             else:
-                self.bot.lwords[user_id] = {"id": user_id, "total": total}
+                self.bot.lwords[user] = {"id": user, "total": total}
         elif total > totalBefore:
-            self.bot.lwords[0]["total"] += (int(self.bot.lwords[user_id]['total']) - totalBefore)
+            self.bot.lwords[0]["total"] += (int(self.bot.lwords[user]['total']) - totalBefore)
             if last_time:
-                self.bot.lwords[user_id] = {"id": user_id, "total": total, "last_time": last_time}
+                self.bot.lwords[user] = {"id": user, "total": total, "last_time": last_time}
             else:
-                self.bot.lwords[user_id] = {"id": user_id, "total": total}
-        else:
-            await ctx.send("Неизвестная ошибка")
+                self.bot.lwords[user] = {"id": user, "total": total}
         await ctx.send("Готово")
 
     @commands.command(hidden=True)
     @commands.is_owner()
-    async def pop(self, ctx, user_id: int): # TODO добавить распознавание пинга
+    async def pop(self, ctx, user: discord.User):
         """Удалите пользователя с ДБ"""
-        self.bot.lwords[0]["total"] -= int(self.bot.lwords[user_id]['total'])
+        user = user.id
+        self.bot.lwords[0]["total"] -= int(self.bot.lwords[user]['total'])
         try:
-            self.bot.lwords.pop(user_id)
+            self.bot.lwords.pop(user)
             await ctx.send("Готово")
         except KeyError as e:
             await ctx.send(f"Ошибка: ```{e}```")
-
-    @commands.command(hidden=True)
-    @commands.is_owner()
-    async def execute(self, ctx, *, query): # TODO бесполезно, удалить
-        """Выполнить запрос в базе данных"""
-
-        try:
-            with ctx.channel.typing():
-                async with self.bot.pool.acquire() as conn:
-                    result = await conn.execute(query)
-            await ctx.send(f"Запрос выполнен:```{result}```")
-        except Exception as e:
-            await ctx.send(f"Ошибка:```{e}```")
-
-    @commands.command(hidden=True)
-    @commands.is_owner()
-    async def fetch(self, ctx, *, query): # TODO бесполезно, удалить
-        """Выполнить поиск в базе данных"""
-
-        try:
-            with ctx.channel.typing():
-                async with self.bot.pool.acquire() as conn:
-                    result = await conn.fetch(query)
-
-            fmtd_result = pprint.pformat([dict(i) for i in result])
-            await ctx.send(f"Поиск выполнен:```{fmtd_result}```")
-        except Exception as e:
-            await ctx.send(f"Ошибка:```{e}```")
-
-    @commands.command(aliases=["resetstatus"], hidden=True)
-    @commands.is_owner()
-    async def restartstatus(self, ctx): # TODO бесполезно, удалить
-        await self.bot.change_presence(status=discord.Status.online, activity=discord.Activity(
-            name=f'кто сколько раз сказал "ладно"', type=discord.ActivityType.competing))
-
-        await ctx.send("Статус был сброшен")
-
-    @commands.command(hidden=True)
-    @commands.is_owner()
-    async def setstatus(self, ctx, status): # TODO бесполезно, удалить
-        """Изменить статус бота"""
-
-        if status.startswith("on"):
-            await self.bot.change_presence(status=discord.Status.online)
-        elif status.startswith("id"):
-            await self.bot.change_presence(status=discord.Status.idle)
-        elif status.startswith("d"):
-            await self.bot.change_presence(status=discord.Status.dnd)
-        elif status.startswith("off") or status.startswith("in"):
-            await self.bot.change_presence(status=discord.Status.invisible)
-        else:
-            await ctx.send("Недействительный статус")
-
-        await ctx.send("Поставить новый статус")
 
     @commands.command(hidden=True)
     @commands.is_owner()

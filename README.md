@@ -16,9 +16,9 @@
 
 Используйте `python3 -m venv <path to repository>`
 
-4. **Попав в виртуальную среду, устанавливаем зависимости**
+4. **Закончив установку виртуальной среды, устанавливаем зависимости**
 
-Используйте `python3 -m pip install -U -r REQUIREMENTS.txt`
+Используйте `python3 -m pip install -U -r requirements.txt`
 
 5. **Создайте базу данных в формате PostGreSQL**
 
@@ -32,7 +32,7 @@
 
 ---
 
-**Важная Заметка**: Вам нужно включить `SERVER MEMBERS` привилегию для работы бота. [Следуйте этим инструкциям](https://discordpy.readthedocs.io/en/latest/intents.html#privileged-intents) чтобы включить это.
+**Важная Заметка**: Вам нужно включить привилегию `SERVER MEMBERS` для работы бота. [Следуйте этим инструкциям.](https://discordpy.readthedocs.io/en/latest/intents.html#privileged-intents)
 
 **Важная Заметка 2**: Нет, я не собираюсь выпускать "ладно" считатель отдельным ботом, так как к нему не будет никакого интереса.
 
@@ -40,4 +40,4 @@
 
 "ладно" counter it is fork from https://github.com/NWordCounter/bot
 
-Большое спасибо [@WINGS07](https://github.com/WINGS07), [@Nikita244](https://github.com/Nikita244) и особенное спасибо моему брату [@JeffyOLOLO](https://github.com/JeffyOLOLO) за большую помощь в програмировании (да, я не знаю ни единого языка програмирования)
+Большое спасибо [WINGS07](https://github.com/WINGS07), [Nikita244](https://github.com/Nikita244) и особенное спасибо моему брату [JeffyOLOLO](https://github.com/JeffyOLOLO) за большую помощь в програмировании (да, я не знаю ни единого языка програмирования)

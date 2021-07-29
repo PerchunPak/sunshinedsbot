@@ -91,7 +91,7 @@ async def on_ready():
 
 
 @bot.event
-async def on_message(message): # TODO скопипастить чтобы так же было когда удаляют сообщение
+async def on_message(message):
     if not bot.ready_for_commands or message.author.bot:
         return
 
@@ -113,6 +113,24 @@ async def on_message(message): # TODO скопипастить чтобы так
                                        "`@{bot.user} help` для помощи с другими командами")
         elif bot.user in message.mentions:
             await message.channel.send(f"Используйте `@{bot.user} help` для списка моих команд")
+
+
+@bot.event
+async def on_message_delete(message):
+    if not bot.ready_for_commands or message.author.bot:
+        return
+
+    if message.guild is not None:
+        for m in re.finditer(r"\b(ладно)(s\b|\b)", message.content, re.IGNORECASE):
+            if message.author.id not in bot.lwords:
+                bot.lwords.update(
+                    {message.author.id: {"total": 0, "id": message.author.id}})
+            bot.lwords[message.author.id]["total"] -= 1
+            bot.lwords[0]["total"] -= 1
+
+    ctx = await bot.get_context(message)
+    if ctx.valid:
+        await bot.invoke(ctx)
 
 
 @tasks.loop(minutes=5, loop=bot.loop)
