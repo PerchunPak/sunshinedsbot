@@ -12,10 +12,9 @@ import time
 import pprint
 import sys
 from random import randint
-import asyncpg
 
 
-def find_color(ctx):
+def find_color(ctx): # TODO зачем такая сложная система определения лс?
     """Ищет цвет отрисовки embed таблиц. Если это цвет по умолчанию или мы находимся в ЛС, вернет "greyple", цвет Дискорда."""
 
     try:
@@ -42,10 +41,10 @@ class Commands(commands.Cog):
 
         embed = discord.Embed(
             title="Команда помощи",
-            description="Я считаю каждый раз когда кто то говорит " + '"ладно"' + ". 
-                        "Я довольно простой бот в использовании. 
-                        "Мой префикс это @упоминание, имеется ввиду что Вам нужно 
-                        f"вставлять {self.bot.user.mention} перед каждой командой.
+            description="Я считаю каждый раз когда кто то говорит " + '"ладно"' + ". "
+                        "Я довольно простой бот в использовании. "
+                        "Мой префикс это @упоминание, имеется ввиду что Вам нужно "
+                        f"вставлять {self.bot.user.mention} перед каждой командой."
                         "\n\nВот короткий список моих команд:", color=find_color(ctx))
         embed.set_footer(text="Примечание: Нет, я не считаю слова перед тем как присоединился на сервер")
         for c in cmds:
@@ -89,7 +88,7 @@ class Commands(commands.Cog):
         if user is None:
             user = ctx.author
         if user == self.bot.user:
-            return await ctx.send(
+            return await ctx.send( # скорее всего оно не хотело работать с нормальным форматированием
                 """@MATUKITE has said the N-word **1,070,855 times**,
 __1,070,801 of which had a hard-R__
 
@@ -127,9 +126,14 @@ They've said the N-word __23,737 times__ since they were last investigated
     async def invite(self, ctx):
         """Скидывает ссылку чтобы Вы могли пригласить бота на свой сервер"""
 
-        await ctx.send("Это моя пригласительная ссылка чтобы Вы могли считать " + '"ладно"' + " тоже:\n"
-                                                                                              f"https://discordapp.com/oauth2/authorize?client_id={self.bot.app_info.id}"
-                                                                                              "&scope=bot&permissions=8")
+        await ctx.send("Это моя пригласительная ссылка чтобы Вы могли считать "
+                       + '"ладно"' + " тоже:\n"
+                       "https://discordapp.com/oauth2/authorize?client_id="
+                       f"{self.bot.app_info.id}&scope=bot&permissions=8"
+                       "**Примечание:** Сейчас вы не можете пригласить бота, "
+                       "датабаза слишком маленькая чтобы уместить там больше "
+                       "одного маленького сервера\n"
+                       "Однако вы можете захостить самим бота для своего сервера")
 
     @commands.command()
     async def stats(self, ctx):
@@ -139,12 +143,12 @@ They've said the N-word __23,737 times__ since they were last investigated
 
         uptime = datetime.datetime.utcnow() - self.bot.started_at
 
-        # * This code was copied from my other bot, MAT
-        y = int(uptime.total_seconds()) // 31557600  # * Number of seconds in 356.25 days
-        mo = int(uptime.total_seconds()) // 2592000 % 12  # * Number of seconds in 30 days
-        d = int(uptime.total_seconds()) // 86400 % 30  # * Number of seconds in 1 day
-        h = int(uptime.total_seconds()) // 3600 % 24  # * Number of seconds in 1 hour
-        mi = int(uptime.total_seconds()) // 60 % 60  # * etc.
+        # * Этот код был скопирован с другого бота, MAT (заметка от создателя NWordCounter)
+        y = int(uptime.total_seconds()) // 31557600  # Количество секунд в 356.25 днях
+        mo = int(uptime.total_seconds()) // 2592000 % 12  # Количество секунд в 30 днях
+        d = int(uptime.total_seconds()) // 86400 % 30  # Количество секунд в 1 дне
+        h = int(uptime.total_seconds()) // 3600 % 24  # Количество секунд в 1 часу
+        mi = int(uptime.total_seconds()) // 60 % 60  # и так далее.
         se = int(uptime.total_seconds()) % 60
 
         frmtd_uptime = []
@@ -194,7 +198,8 @@ They've said the N-word __23,737 times__ since they were last investigated
     @commands.command(aliases=["leaderboard", "high"])
     @commands.guild_only()
     async def top(self, ctx, param: str = None):
-        """Показывает таблицу лидеров по произношению слова "ладно" на этом сервере. Используйте `top global` чтобы посмотреть таблицу лидеров всех серверов
+        """
+        Показывает таблицу лидеров по произношению слова "ладно" на этом сервере. Используйте `top global` чтобы посмотреть таблицу лидеров всех серверов
         Примечание: Если пользователь сказал "ладно" на другом сервере, на котором я тоже есть, они будут приняты во внимание.
         """
         await ctx.channel.trigger_typing()
@@ -249,7 +254,7 @@ They've said the N-word __23,737 times__ since they were last investigated
             return await ctx.send(exc)
 
     @commands.command(hidden=True)
-    @commands.is_owner()
+    @commands.is_owner() # TODO добавить распознавание пинга
     async def edit(self, ctx, user_id: int, total: int, last_time: int = None):
         """Отредактируйте запись пользователя в ДБ или добавьте новую"""
         totalBefore = self.bot.lwords[user_id]['total']
@@ -271,7 +276,7 @@ They've said the N-word __23,737 times__ since they were last investigated
 
     @commands.command(hidden=True)
     @commands.is_owner()
-    async def pop(self, ctx, user_id: int):
+    async def pop(self, ctx, user_id: int): # TODO добавить распознавание пинга
         """Удалите пользователя с ДБ"""
         self.bot.lwords[0]["total"] -= int(self.bot.lwords[user_id]['total'])
         try:
@@ -282,7 +287,7 @@ They've said the N-word __23,737 times__ since they were last investigated
 
     @commands.command(hidden=True)
     @commands.is_owner()
-    async def execute(self, ctx, *, query):
+    async def execute(self, ctx, *, query): # TODO бесполезно, удалить
         """Выполнить запрос в базе данных"""
 
         try:
@@ -295,7 +300,7 @@ They've said the N-word __23,737 times__ since they were last investigated
 
     @commands.command(hidden=True)
     @commands.is_owner()
-    async def fetch(self, ctx, *, query):
+    async def fetch(self, ctx, *, query): # TODO бесполезно, удалить
         """Выполнить поиск в базе данных"""
 
         try:
@@ -310,7 +315,7 @@ They've said the N-word __23,737 times__ since they were last investigated
 
     @commands.command(aliases=["resetstatus"], hidden=True)
     @commands.is_owner()
-    async def restartstatus(self, ctx):
+    async def restartstatus(self, ctx): # TODO бесполезно, удалить
         await self.bot.change_presence(status=discord.Status.online, activity=discord.Activity(
             name=f'кто сколько раз сказал "ладно"', type=discord.ActivityType.competing))
 
@@ -318,7 +323,7 @@ They've said the N-word __23,737 times__ since they were last investigated
 
     @commands.command(hidden=True)
     @commands.is_owner()
-    async def setstatus(self, ctx, status):
+    async def setstatus(self, ctx, status): # TODO бесполезно, удалить
         """Изменить статус бота"""
 
         if status.startswith("on"):

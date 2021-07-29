@@ -12,7 +12,7 @@ import datetime
 import re
 import os
 
-import config #! You'll need to define your own credentials in config.py
+import config # Не забывайте что вам нужно указать свои данные в config.py
 
 bot_intents = discord.Intents.default()
 bot_intents.members = True
@@ -33,7 +33,8 @@ bot.load_extension("commands")
 bot.load_extension("error_handlers")
 
 
-async def create_pool():
+async def create_pool(): # TODO переписать систему БД
+                         # на самом деле уже готово, но осталось пару мелочей
     """Создает таблицы в бд, если они уже есть - загружает их"""
 
     bot.pool = await asyncpg.create_pool(config.POSTGRES)
@@ -90,7 +91,7 @@ async def on_ready():
 
 
 @bot.event
-async def on_message(message):
+async def on_message(message): # TODO скопипастить чтобы так же было когда удаляют сообщение
     if not bot.ready_for_commands or message.author.bot:
         return
 
@@ -162,7 +163,7 @@ async def restartudb(ctx):
 
 try:
     bot.loop.run_until_complete(bot.start(config.TOKEN))
-except KeyboardInterrupt:
+except KeyboardInterrupt: # KeyboardInterrupt это CTRL C
     print("\nЗакрытие")
     bot.loop.run_until_complete(bot.change_presence(status=discord.Status.invisible))
     for e in bot.extensions.copy():
