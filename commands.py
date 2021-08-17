@@ -27,7 +27,7 @@ def find_color(ctx):
     return color
 
 
-class Commands(commands.Cog):
+class Commands(commands.Cog): # TODO Перевести все команды на русский
     """Команды для ладно считателя"""
 
     def __init__(self, bot):
@@ -130,7 +130,7 @@ They've said the N-word __23,737 times__ since they were last investigated
                        + '"ладно"' + " тоже:\n"
                        "https://discordapp.com/oauth2/authorize?client_id="
                        f"{self.bot.app_info.id}&scope=bot&permissions=8"
-                       "**Примечание:** Сейчас вы не можете пригласить бота, "
+                       "**Примечание:** Сейчас вы не можете пригласить бота, " # TODO Добавить проверку на публик бота
                        "датабаза слишком маленькая чтобы уместить там больше "
                        "одного маленького сервера\n"
                        "Однако вы можете захостить самим бота для своего сервера")
