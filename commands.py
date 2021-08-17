@@ -88,15 +88,13 @@ class Commands(commands.Cog): # TODO Перевести все команды н
         if user is None:
             user = ctx.author
         if user == self.bot.user:
-            return await ctx.send(  # скорее всего оно не хотело работать с нормальным форматированием
-                """@MATUKITE has said the N-word **1,070,855 times**,
-__1,070,801 of which had a hard-R__
-
-They've said the N-word __23,737 times__ since they were last investigated
-            """)
+            return await ctx.send("@MATUKITE has said the N-word **1,070,855 times**,\n"
+                                  "__1,070,801 of which had a hard-R__\n"
+                                  "\n"
+                                  "They've said the N-word __23,737 times__ since they were last investigated")
         if user.bot:
             return await ctx.send(
-                "Я не считаю " + '"ладно-слова"' + ", сказанные ботами. Представляете, насколько это было бы странно?")
+                'Я не считаю "ладно-слова", сказанные ботами. Представляете, насколько это было бы странно?')
 
         try:
             count = self.bot.lwords[user.id]
