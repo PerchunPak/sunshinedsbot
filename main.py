@@ -1,6 +1,7 @@
 """
 "ладно" считатель - Простой в использовании бот Discord, который считает, сколько раз каждый пользователь сказал ладно
 Написано в 2019 by NinjaSnail1080 (Дискорд: @NinjaSnail1080#8581), улучшено и переведено Perchun_Pak
+Dockerized by Kogeki
 """
 
 from discord.ext import commands, tasks
