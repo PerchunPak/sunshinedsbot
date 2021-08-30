@@ -1,1 +1,12 @@
+/.*
+!.gitignore
+/__*__
+*.bat
+config.py
+/grafics/*.png
+/Include
+/Lib
+/Scripts
+pyvenv.cfg
+*.sql
 config.py
