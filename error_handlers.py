@@ -3,32 +3,32 @@
 Написано в 2019 by NinjaSnail1080 (Дискорд: @NinjaSnail1080#8581), улучшено и переведено Perchun_Pak
 """
 
-from discord.ext import commands
-import discord
+from discord.ext.commands import Cog, NotOwner, NoPrivateMessage, BadArgument
+from discord import Forbidden, NotFound
 
 
-class Error_Handlers(commands.Cog):
+class Error_Handlers(Cog):
     """Плейсхолдеры ошибкок"""
 
     def __init__(self, bot):
         self.bot = bot
 
-    @commands.Cog.listener()
+    @Cog.listener()
     async def on_command_error(self, ctx, exception):
         exc = exception
-        if isinstance(exc, commands.NotOwner):
+        if isinstance(exc, NotOwner):
             return await ctx.send(f"Только мой Владелец, {self.bot.app_info.owner}, может использовать эту команду")
 
-        elif isinstance(exc, commands.NoPrivateMessage):
+        elif isinstance(exc, NoPrivateMessage):
             return
 
-        elif isinstance(exc, commands.BadArgument):
+        elif isinstance(exc, BadArgument):
             return
 
-        elif isinstance(exc, discord.Forbidden):
+        elif isinstance(exc, Forbidden):
             return
 
-        elif isinstance(exc, discord.NotFound):
+        elif isinstance(exc, NotFound):
             return
 
         elif "Missing Permissions" in str(exc):

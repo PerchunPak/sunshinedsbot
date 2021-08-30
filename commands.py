@@ -3,14 +3,13 @@
 Написано в 2019 by NinjaSnail1080 (Дискорд: @NinjaSnail1080#8581), улучшено и переведено Perchun_Pak
 """
 
-from discord.ext import commands
-import discord
+from discord.ext.commands import Cog, command, guild_only, is_owner, NoPrivateMessage, BadArgument
+from discord import Color, Embed, User
 
-import collections
-import datetime
-import time
-import pprint
-import sys
+from collections import Counter
+from datetime import datetime
+from time import perf_counter
+from sys import version_info
 from random import randint
 
 
@@ -18,28 +17,28 @@ def find_color(ctx):
     """Ищет цвет отрисовки embed таблиц. Если это цвет по умолчанию или мы находимся в ЛС, вернет "greyple", цвет Дискорда."""
 
     try:
-        if ctx.guild.me.color == discord.Color.default():
-            color = discord.Color.greyple()
+        if ctx.guild.me.color == Color.default():
+            color = Color.greyple()
         else:
             color = ctx.guild.me.color
     except AttributeError:  # * If it's a DM channel
-        color = discord.Color.greyple()
+        color = Color.greyple()
     return color
 
 
-class Commands(commands.Cog): # TODO Перевести все команды на русский
+class Commands(Cog): # TODO Перевести все команды на русский
     """Команды для ладно считателя"""
 
     def __init__(self, bot):
         self.bot = bot
 
-    @commands.command()
+    @command()
     async def help(self, ctx):
         """Это команда помощи!"""
 
         cmds = sorted([c for c in self.bot.commands if not c.hidden], key=lambda c: c.name)
 
-        embed = discord.Embed(
+        embed = Embed(
             title="Команда помощи",
             description="Я считаю каждый раз когда кто то говорит " + '"ладно"' + ". "
                         "Я довольно простой бот в использовании. "
@@ -52,11 +51,11 @@ class Commands(commands.Cog): # TODO Перевести все команды н
 
         await ctx.send(embed=embed)
 
-    @commands.command(aliases=["info"])
+    @command(aliases=["info"])
     async def about(self, ctx):
         """Немного базовой информации про меня"""
 
-        embed = discord.Embed(
+        embed = Embed(
             title=str(self.bot.user), description=self.bot.app_info.description +
                                                   f"\n\n**ID**: {self.bot.app_info.id}", color=find_color(ctx))
 
@@ -66,9 +65,9 @@ class Commands(commands.Cog): # TODO Перевести все команды н
         embed.add_field(name="Количество пользователей", value=len(self.bot.users))
         embed.add_field(
             name="Язык программирования",
-            value=f"Python {sys.version_info[0]}.{sys.version_info[1]}.{sys.version_info[2]}")
+            value=f"Python {version_info[0]}.{version_info[1]}.{version_info[2]}")
         embed.add_field(
-            name="Библиотека", value="[discord.py](https://github.com/Rapptz/discord.py)")
+            name="Библиотека", value="[py](https://github.com/Rapptz/py)")
         embed.add_field(
             name="Лицензия",
             value="[CC0 1.0 Universal](https://creativecommons.org/publicdomain/zero/1.0/)")
@@ -79,8 +78,8 @@ class Commands(commands.Cog): # TODO Перевести все команды н
 
         await ctx.send(embed=embed)
 
-    @commands.command()
-    async def count(self, ctx, user: discord.User = None):
+    @command()
+    async def count(self, ctx, user: User = None):
         """Узнайте, сколько раз пользователь сказал "ладно"
         Формат: `count <@пинг пользователя>`
         Если вы не указываете пинг, я укажу **вашу** статистику
@@ -117,10 +116,10 @@ class Commands(commands.Cog): # TODO Перевести все команды н
 
     @count.error
     async def count_error(self, ctx, exc):
-        if isinstance(exc, commands.BadArgument):
+        if isinstance(exc, BadArgument):
             return await ctx.send(exc)
 
-    @commands.command()
+    @command()
     async def invite(self, ctx):
         """Скидывает ссылку чтобы Вы могли пригласить бота на свой сервер"""
 
@@ -133,13 +132,13 @@ class Commands(commands.Cog): # TODO Перевести все команды н
                        "одного маленького сервера\n"
                        "Однако вы можете захостить самим бота для своего сервера")
 
-    @commands.command()
+    @command()
     async def stats(self, ctx):
         """Показывает мою статистику"""
 
         await ctx.channel.trigger_typing()
 
-        uptime = datetime.datetime.utcnow() - self.bot.started_at
+        uptime = datetime.utcnow() - self.bot.started_at
 
         # * Этот код был скопирован с другого бота, MAT (заметка от создателя NWordCounter)
         y = int(uptime.total_seconds()) // 31557600  # Количество секунд в 356.25 днях
@@ -165,9 +164,9 @@ class Commands(commands.Cog): # TODO Перевести все команды н
 
         allUsers = f"{len(self.bot.lwords):,}"
         for _ in range(1): randomInt = randint(0, 100)
-        embed = discord.Embed(
+        embed = Embed(
             description=f"ID: {self.bot.user.id}",
-            timestamp=datetime.datetime.utcnow(),
+            timestamp=datetime.utcnow(),
             color=find_color(ctx))
         embed.add_field(name="Количество серверов", value=f"{len(self.bot.guilds):,} серверов")
         embed.add_field(name="Количество пользовотелей", value=f"{len(self.bot.users):,} уникальных пользователей")
@@ -193,8 +192,8 @@ class Commands(commands.Cog): # TODO Перевести все команды н
 
         await ctx.send(embed=embed)
 
-    @commands.command(aliases=["leaderboard", "high"])
-    @commands.guild_only()
+    @command(aliases=["leaderboard", "high"])
+    @guild_only()
     async def top(self, ctx, param: str = None):
         """
         Показывает таблицу лидеров по произношению слова "ладно" на этом сервере. Используйте `top global` чтобы посмотреть таблицу лидеров всех серверов
@@ -208,13 +207,13 @@ class Commands(commands.Cog): # TODO Перевести все команды н
                 for u, n in self.bot.lwords.items():
                     if self.bot.get_user(u):
                         leaderboard.update({self.bot.get_user(u): n["total"]})
-                leaderboard = dict(collections.Counter(leaderboard).most_common(10))
+                leaderboard = dict(Counter(leaderboard).most_common(10))
             else:
                 for m in ctx.guild.members:
                     if m.id in self.bot.lwords and not m.bot:
                         if self.bot.lwords[m.id]["total"]:
                             leaderboard.update({m: self.bot.lwords[m.id]["total"]})
-                leaderboard = dict(collections.Counter(leaderboard).most_common(10))
+                leaderboard = dict(Counter(leaderboard).most_common(10))
             return leaderboard
 
         leaderboard = await self.bot.loop.run_in_executor(None, create_leaderboard)
@@ -231,8 +230,8 @@ class Commands(commands.Cog): # TODO Перевести все команды н
         description = description.replace("**1.**", ":first_place:").replace("**2.**", ":second_place:").replace(
             "**3.**", ":third_place:")
 
-        embed = discord.Embed(description=description, color=find_color(ctx),
-                              timestamp=datetime.datetime.utcnow())
+        embed = Embed(description=description, color=find_color(ctx),
+                              timestamp=datetime.utcnow())
         if param == "global":
             embed.set_author(
                 name=f"Топ за все время")
@@ -248,12 +247,12 @@ class Commands(commands.Cog): # TODO Перевести все команды н
 
     @top.error
     async def top_error(self, ctx, exc):
-        if isinstance(exc, commands.NoPrivateMessage):
+        if isinstance(exc, NoPrivateMessage):
             return await ctx.send(exc)
 
-    @commands.command(hidden=True)
-    @commands.is_owner()
-    async def edit(self, ctx, user: discord.User, total: int, last_time: int = None):
+    @command(hidden=True)
+    @is_owner()
+    async def edit(self, ctx, user: User, total: int, last_time: int = None):
         """Отредактируйте запись пользователя в ДБ или добавьте новую"""
         user = user.id
         totalBefore = self.bot.lwords[user]['total']
@@ -271,9 +270,9 @@ class Commands(commands.Cog): # TODO Перевести все команды н
                 self.bot.lwords[user] = {"id": user, "total": total}
         await ctx.send("Готово")
 
-    @commands.command(hidden=True)
-    @commands.is_owner()
-    async def pop(self, ctx, user: discord.User):
+    @command(hidden=True)
+    @is_owner()
+    async def pop(self, ctx, user: User):
         """Удалите пользователя с ДБ"""
         user = user.id
         self.bot.lwords[0]["total"] -= int(self.bot.lwords[user]['total'])
@@ -283,12 +282,12 @@ class Commands(commands.Cog): # TODO Перевести все команды н
         except KeyError as e:
             await ctx.send(f"Ошибка: ```{e}```")
 
-    @commands.command(hidden=True)
-    @commands.is_owner()
+    @command(hidden=True)
+    @is_owner()
     async def updatedb(self, ctx):
         temp = await ctx.send("Обновление вручную... Это может занять несколько минут... Подождите...")
         with ctx.channel.typing():
-            start = time.perf_counter()
+            start = perf_counter()
             async with self.bot.pool.acquire() as conn:
                 await conn.execute("""
                     INSERT INTO lwords
@@ -305,7 +304,7 @@ class Commands(commands.Cog): # TODO Перевести все команды н
                         WHERE id = {}
                     ;""".format(data["total"], data["id"]))
 
-        delta = time.perf_counter() - start
+        delta = perf_counter() - start
         mi = int(delta) // 60
         sec = int(delta) % 60
         ms = round(delta * 1000 % 1000)

@@ -4,41 +4,36 @@
 Dockerized by Kogeki
 """
 
-from discord.ext import commands, tasks
-import discord
-import asyncpg
-import psutil
+from discord.ext.commands import Bot, is_owner, when_mentioned
+from discord.ext.tasks import loop
+from discord import Intents, Status, Activity, ActivityType, Client
+from datetime import datetime
+from re import finditer, IGNORECASE
 
-import datetime
-import re
-import os
+from config import TOKEN, POSTGRES # Не забывайте что вам нужно указать свои данные в config.py
 
-import config # Не забывайте что вам нужно указать свои данные в config.py
-
-bot_intents = discord.Intents.default()
+bot_intents = Intents.default()
 bot_intents.members = True
 
-bot = commands.Bot(
-    command_prefix=commands.when_mentioned,
+bot = Bot(
+    command_prefix=when_mentioned,
     description="ладно считатель",
     case_insensitive=True,
     help_command=None,
-    status=discord.Status.invisible,
+    status=Status.invisible,
     intents=bot_intents,
     fetch_offline_members=True
 )
 
-bot.process = psutil.Process(os.getpid())
 bot.ready_for_commands = False
 bot.load_extension("commands")
 bot.load_extension("error_handlers")
 
 
-async def create_pool(): # TODO переписать систему БД
-                         # на самом деле уже готово, но осталось пару мелочей
+async def create_pool():
     """Создает таблицы в бд, если они уже есть - загружает их"""
 
-    bot.pool = await asyncpg.create_pool(config.POSTGRES)
+    bot.pool = await create_pool(POSTGRES)
     async with bot.pool.acquire() as conn:
         await conn.execute("""
             CREATE TABLE IF NOT EXISTS lwords (
@@ -87,8 +82,8 @@ async def on_ready():
     bot.started_at = datetime.datetime.utcnow()
     bot.app_info = await bot.application_info()
 
-    await bot.change_presence(status=discord.Status.online, activity=discord.Activity(
-        name=f'кто сколько раз сказал "ладно"', type=discord.ActivityType.competing))
+    await bot.change_presence(status=Status.online, activity=Activity(
+        name=f'кто сколько раз сказал "ладно"', type=ActivityType.competing))
 
 
 @bot.event
@@ -97,7 +92,7 @@ async def on_message(message):
         return
 
     if message.guild is not None:
-        for m in re.finditer(r"\b(ладно)(s\b|\b)", message.content, re.IGNORECASE):
+        for m in finditer(r"\b(ладно)(s\b|\b)", message.content, IGNORECASE):
             if message.author.id not in bot.lwords:
                 bot.lwords.update(
                     {message.author.id: {"total": 0, "id": message.author.id}})
@@ -122,7 +117,7 @@ async def on_message_delete(message):
         return
 
     if message.guild is not None:
-        for m in re.finditer(r"\b(ладно)(s\b|\b)", message.content, re.IGNORECASE):
+        for m in finditer(r"\b(ладно)(s\b|\b)", message.content, IGNORECASE):
             if message.author.id not in bot.lwords:
                 bot.lwords.update(
                     {message.author.id: {"total": 0, "id": message.author.id}})
@@ -134,7 +129,7 @@ async def on_message_delete(message):
         await bot.invoke(ctx)
 
 
-@tasks.loop(minutes=5, loop=bot.loop)
+@loop(minutes=5, loop=bot.loop)
 async def update_db():
     """Обновляет ДБ каждые 5 минут"""
 
@@ -156,7 +151,7 @@ async def update_db():
 
 
 @bot.command(hidden=True)
-@commands.is_owner()
+@is_owner()
 async def reload(ctx):
     """Перезагружает некоторые файлы бота"""
 
@@ -166,14 +161,14 @@ async def reload(ctx):
 
 
 @bot.command(hidden=True)
-@commands.is_owner()
+@is_owner()
 async def restartdb(ctx):
     await create_pool()
     await ctx.send("ДБ перезагружена")
 
 
 @bot.command(hidden=True)
-@commands.is_owner()
+@is_owner()
 async def restartudb(ctx):
     update_db.cancel()
     update_db.start()
@@ -181,15 +176,14 @@ async def restartudb(ctx):
 
 
 try:
-    bot.loop.run_until_complete(bot.start(config.TOKEN))
-except KeyboardInterrupt: # KeyboardInterrupt это CTRL C
+    bot.loop.run_until_complete(bot.start(TOKEN))
+except KeyboardInterrupt:
     print("\nЗакрытие")
-    bot.loop.run_until_complete(bot.change_presence(status=discord.Status.invisible))
+    bot.loop.run_until_complete(bot.change_presence(status=Status.invisible))
     for e in bot.extensions.copy():
         bot.unload_extension(e)
     print("Выходим")
-    bot.loop.run_until_complete(bot.logout())
+    bot.loop.run_until_complete(Client.close(bot))
 finally:
     update_db.cancel()
-    bot.loop.run_until_complete(bot.pool.close())
     print("Закрыто")
