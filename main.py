@@ -9,6 +9,7 @@ from discord.ext.tasks import loop
 from discord import Intents, Status, Activity, ActivityType, Client
 from datetime import datetime
 from re import finditer, IGNORECASE
+from asyncpg import create_pool as pg_create_pool
 
 from config import TOKEN, POSTGRES # Не забывайте что вам нужно указать свои данные в config.py
 
@@ -33,7 +34,7 @@ bot.load_extension("error_handlers")
 async def create_pool():
     """Создает таблицы в бд, если они уже есть - загружает их"""
 
-    bot.pool = await create_pool(POSTGRES)
+    bot.pool = await pg_create_pool(POSTGRES)
     async with bot.pool.acquire() as conn:
         await conn.execute("""
             CREATE TABLE IF NOT EXISTS lwords (
@@ -70,7 +71,7 @@ async def on_ready():
     print(bot.user)
     print(bot.user.id)
     print("-----------------")
-    print(datetime.datetime.now().strftime("%m/%d/%Y %X"))
+    print(datetime.now().strftime("%m/%d/%Y %X"))
     print("-----------------")
     print("Shards: " + str(bot.shard_count))
     print("Серверов: " + str(len(bot.guilds)))
@@ -79,7 +80,7 @@ async def on_ready():
 
     update_db.start()
     bot.ready_for_commands = True
-    bot.started_at = datetime.datetime.utcnow()
+    bot.started_at = datetime.utcnow()
     bot.app_info = await bot.application_info()
 
     await bot.change_presence(status=Status.online, activity=Activity(

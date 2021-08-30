@@ -1,3 +1,2 @@
-asyncpg
 discord.py
-psutil
+asyncpg==0.24.0
