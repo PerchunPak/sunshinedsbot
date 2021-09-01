@@ -67,16 +67,16 @@ async def on_connect():
 async def on_ready():
     await create_pool()
 
-    print("\nЗашел как:")
-    print(bot.user)
-    print(bot.user.id)
-    print("-----------------")
-    print(datetime.now().strftime("%m/%d/%Y %X"))
-    print("-----------------")
-    print("Shards: " + str(bot.shard_count))
-    print("Серверов: " + str(len(bot.guilds)))
-    print("Пользователей: " + str(len(bot.users)))
-    print("-----------------\n")
+    print('\nЗашел как:\n'
+         f'{bot.user}\n'
+         f'{bot.user.id}\n'
+          '-----------------\n'
+         f'{datetime.now().strftime("%X %d.%m.%Y")}\n'
+          '-----------------\n'
+         f'Шардов: {str(bot.shard_count)}\n'
+         f'Серверов: {str(len(bot.guilds))}\n'
+         f'Пользователей: {str(len(bot.users))}\n'
+          '-----------------')
 
     update_db.start()
     bot.ready_for_commands = True
