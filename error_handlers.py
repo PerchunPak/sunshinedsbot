@@ -42,4 +42,4 @@ class ErrorHandlers(Cog):
 
 
 def setup(bot):
-    bot.add_cog(Error_Handlers(bot))
+    bot.add_cog(ErrorHandlers(bot))
