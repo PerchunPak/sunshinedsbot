@@ -7,6 +7,6 @@ config.py
 /Include
 /Lib
 /Scripts
+/venv
 pyvenv.cfg
 *.sql
-config.py

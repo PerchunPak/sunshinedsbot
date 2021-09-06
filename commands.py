@@ -26,7 +26,7 @@ def find_color(ctx):
     return color
 
 
-class Commands(Cog): # TODO Перевести все команды на русский
+class Commands(Cog):  # TODO Перевести все команды на русский
     """Команды для ладно считателя"""
 
     def __init__(self, bot):
@@ -57,12 +57,12 @@ class Commands(Cog): # TODO Перевести все команды на рус
 
         embed = Embed(
             title=str(self.bot.user), description=self.bot.app_info.description +
-                                                  f"\n\n**ID**: {self.bot.app_info.id}", color=find_color(ctx))
+                "\n\n**ID**: " + self.bot.app_info.id, color=find_color(ctx))
 
         embed.set_thumbnail(url=self.bot.app_info.icon_url)
         embed.add_field(name="Владелец", value=self.bot.app_info.owner)
-        embed.add_field(name="Количество серверов", value=len(self.bot.guilds))
-        embed.add_field(name="Количество пользователей", value=len(self.bot.users))
+        embed.add_field(name="Количество серверов", value=str(len(self.bot.guilds)))
+        embed.add_field(name="Количество пользователей", value=str(len(self.bot.users)))
         embed.add_field(
             name="Язык программирования",
             value=f"Python {version_info[0]}.{version_info[1]}.{version_info[2]}")
@@ -97,7 +97,7 @@ class Commands(Cog): # TODO Перевести все команды на рус
 
         try:
             count = self.bot.lwords[user.id]
-        except Exception:  # оно возвращает айди пользователя указаного в команде
+        except Exception:  # оно возвращает айди пользователя указанного в команде
             return await ctx.send(f"{user.mention} еще ни разу не говорил " + '"ладно"' + ". Странный чел")
 
         if count["total"]:
@@ -127,7 +127,7 @@ class Commands(Cog): # TODO Перевести все команды на рус
                        + '"ладно"' + " тоже:\n"
                        "https://discordapp.com/oauth2/authorize?client_id="
                        f"{self.bot.app_info.id}&scope=bot&permissions=8"
-                       "**Примечание:** Сейчас вы не можете пригласить бота, " # TODO Добавить проверку на публик бота
+                       "**Примечание:** Сейчас вы не можете пригласить бота, "  # TODO Добавить проверку на публик бота
                        "датабаза слишком маленькая чтобы уместить там больше "
                        "одного маленького сервера\n"
                        "Однако вы можете захостить самим бота для своего сервера")
@@ -163,13 +163,13 @@ class Commands(Cog): # TODO Перевести все команды на рус
             frmtd_uptime.append(f"{se}с")
 
         allUsers = f"{len(self.bot.lwords):,}"
-        for _ in range(1): randomInt = randint(0, 100)
+        randomInt = randint(0, 100)
         embed = Embed(
             description=f"ID: {self.bot.user.id}",
             timestamp=datetime.utcnow(),
             color=find_color(ctx))
         embed.add_field(name="Количество серверов", value=f"{len(self.bot.guilds):,} серверов")
-        embed.add_field(name="Количество пользовотелей", value=f"{len(self.bot.users):,} уникальных пользователей")
+        embed.add_field(name="Количество пользователей", value=f"{len(self.bot.users):,} уникальных пользователей")
         embed.add_field(
             name="Количество каналов",
             value=f"{len(list(self.bot.get_all_channels()) + self.bot.private_channels):,} "
@@ -196,7 +196,8 @@ class Commands(Cog): # TODO Перевести все команды на рус
     @guild_only()
     async def top(self, ctx, param: str = None):
         """
-        Показывает таблицу лидеров по произношению слова "ладно" на этом сервере. Используйте `top global` чтобы посмотреть таблицу лидеров всех серверов
+        Показывает таблицу лидеров по произношению слова "ладно" на этом сервере.
+        Используйте `top global` чтобы посмотреть таблицу лидеров всех серверов.
         Примечание: Если пользователь сказал "ладно" на другом сервере, на котором я тоже есть, они будут приняты во внимание.
         """
         await ctx.channel.trigger_typing()
@@ -230,16 +231,14 @@ class Commands(Cog): # TODO Перевести все команды на рус
         description = description.replace("**1.**", ":first_place:").replace("**2.**", ":second_place:").replace(
             "**3.**", ":third_place:")
 
-        embed = Embed(description=description, color=find_color(ctx),
-                              timestamp=datetime.utcnow())
+        embed = Embed(description=description, color=find_color(ctx), timestamp=datetime.utcnow())
         if param == "global":
-            embed.set_author(
-                name=f"Топ за все время")
+            embed.set_author(name="Топ за все время")
         else:
             embed.set_author(
-                name=f"Топ сервера {ctx.guild.name}", icon_url=ctx.guild.icon_url)
+                name="Топ сервера " + ctx.guild.name, icon_url=ctx.guild.icon_url)
 
-        for _ in range(1): randomInt = randint(0, 100)
+        randomInt = randint(0, 100)
         embed.set_footer(
             text="Эти списки верны на: " + str(randomInt) + "%", icon_url=self.bot.user.avatar_url)
 

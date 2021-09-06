@@ -11,7 +11,7 @@ from datetime import datetime
 from re import finditer, IGNORECASE
 from asyncpg import create_pool as pg_create_pool
 
-from config import TOKEN, POSTGRES # Не забывайте что вам нужно указать свои данные в config.py
+from config import TOKEN, POSTGRES  # Не забывайте что вам нужно указать свои данные в config.py
 
 bot_intents = Intents.default()
 bot_intents.members = True
@@ -60,7 +60,7 @@ async def create_pool():
 
 @bot.event
 async def on_connect():
-    print("\nУстановлено соеденение с дискордом")
+    print("\nУстановлено соединение с дискордом")
 
 
 @bot.event

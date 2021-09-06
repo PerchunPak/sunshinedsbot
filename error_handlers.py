@@ -7,8 +7,8 @@ from discord.ext.commands import Cog, NotOwner, NoPrivateMessage, BadArgument
 from discord import Forbidden, NotFound
 
 
-class Error_Handlers(Cog):
-    """Плейсхолдеры ошибкок"""
+class ErrorHandlers(Cog):
+    """Плейсхолдеры ошибок"""
 
     def __init__(self, bot):
         self.bot = bot

@@ -33,7 +33,7 @@
 
 В корневом каталоге есть файл под названием `config.py`, который содержит две переменные, необходимые для запуска бота. Один из них - `TOKEN`, который представляет собой строку, содержащую токен бота Discord. Другой переменной является `POSTGRES`, которая представляет собой строку, содержащую DSN для базы данных Postgres, созданной на шаге 5.
 
-> Взято и перевено с https://github.com/NWordCounter/bot
+> Взято и переведено с https://github.com/NWordCounter/bot
 
 ---
 
@@ -43,6 +43,6 @@
 
 ## Большое спасибо
 
-"ладно" counter it is fork from https://github.com/NWordCounter/bot
+"ладно" counter it is forked from https://github.com/NWordCounter/bot
 
-Большое спасибо [WINGS07](https://github.com/WINGS07), [Nikita244](https://github.com/Nikita244) и особенное спасибо моему брату [JeffyOLOLO](https://github.com/JeffyOLOLO) за большую помощь в програмировании (да, я не знаю ни единого языка програмирования)
+Большое спасибо [WINGS07](https://github.com/WINGS07), [Nikita244](https://github.com/Nikita244) и особенное спасибо моему брату [JeffyOLOLO](https://github.com/JeffyOLOLO) за большую помощь в программировании (да, я не знаю ни единого языка программирования)
