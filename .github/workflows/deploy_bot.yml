@@ -1,28 +1,23 @@
-# Простейший тест бота линтом, позже также добавлю тесты pytest
+# Автоматический деплой бота в хостинг
+# Устаревшая версия, потому что последняя не поддерживает SFTP
 
-name: Python application
+name: FTP Deploy
 
 on:
   push:
-    branches: [ ladno-counter ]
-  pull_request:
-    branches: [ main, ladno-counter ]
+    branches: [ main ]
 
 jobs:
-  build:
+  deploy:
 
     runs-on: ubuntu-latest
 
-    strategy:
-      matrix:
-        python-version: [3.6, 3.7, 3.8, 3.9]
-
     steps:
     - uses: actions/checkout@v2
-    - name: Set up Python ${{ matrix.python-version }}
+    - name: Set up Python 3.9
       uses: actions/setup-python@v2
       with:
-        python-version: ${{ matrix.python-version }}
+        python-version: 3.9
     - name: Install dependencies
       run: |
         python -m pip install --upgrade pip
@@ -36,3 +31,10 @@ jobs:
         flake8 . --count --exit-zero --max-complexity=10 --max-line-length=127 --statistics
     #- name: Test with pytest
     #  run: pytest
+    - name: FTP Deploy
+      uses: SamKirkland/FTP-Deploy-Action@3.1.1
+      with:
+        ftp-server: ${{ secrets.ftp_server }}
+        ftp-username: ${{ secrets.ftp_username }}
+        ftp-password: ${{ secrets.ftp_password }}
+        git-ftp-args: --insecure
