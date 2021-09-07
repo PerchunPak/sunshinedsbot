@@ -1,1 +1,8 @@
-*
+/.github/*
+/.github
+.git-ftp-ignore
+Dockerfile
+README.md
+config.py.example
+*.yml
+.gitignore
