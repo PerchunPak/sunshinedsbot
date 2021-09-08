@@ -1,12 +1,8 @@
 # Простейший тест бота линтом, позже также добавлю тесты pytest
 
-name: Python application
+name: Run Tests
 
-on:
-  push:
-    branches: [ ladno-counter ]
-  pull_request:
-    branches: [ main, ladno-counter ]
+on: [ push, pull_request ]
 
 jobs:
   build:
