@@ -1,7 +1,8 @@
+[![Run Tests](https://github.com/PerchunPak/sunshinedsbot/actions/workflows/actions.yml/badge.svg?branch=main)](https://github.com/PerchunPak/sunshinedsbot/actions/workflows/actions.yml)
+
 # Sunshine Discord Bot
 
 Наш дискорд бот, полностью переведен на русский
-
 Мой первый проект, поэтому может содержать много ошибок
 
 ## Установка
@@ -46,3 +47,5 @@
 "ладно" counter it is forked from https://github.com/NWordCounter/bot
 
 Большое спасибо [WINGS07](https://github.com/WINGS07), [Nikita244](https://github.com/Nikita244) и особенное спасибо моему брату [JeffyOLOLO](https://github.com/JeffyOLOLO) за большую помощь в программировании (да, я не знаю ни единого языка программирования)
+
+[<img alt="Deployed with FTP Deploy Action" src="https://img.shields.io/badge/Deployed With-FTP DEPLOY ACTION-%3CCOLOR%3E?style=for-the-badge&color=2b9348">](https://github.com/SamKirkland/FTP-Deploy-Action)
