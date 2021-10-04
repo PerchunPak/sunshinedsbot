@@ -56,8 +56,8 @@ class Commands(Cog):  # TODO Перевести все команды на ру�
         """Немного базовой информации про меня"""
 
         embed = Embed(
-            title=str(self.bot.user), description=self.bot.app_info.description +
-                "\n\n**ID**: " + self.bot.app_info.id, color=find_color(ctx))
+            title=str(self.bot.user),
+            description=self.bot.app_info.description + f"\n\n**ID**: {self.bot.app_info.id}", color=find_color(ctx))
 
         embed.set_thumbnail(url=self.bot.app_info.icon_url)
         embed.add_field(name="Владелец", value=self.bot.app_info.owner)
@@ -123,10 +123,9 @@ class Commands(Cog):  # TODO Перевести все команды на ру�
     async def invite(self, ctx):
         """Скидывает ссылку чтобы Вы могли пригласить бота на свой сервер"""
 
-        await ctx.send("Это моя пригласительная ссылка чтобы Вы могли считать "
-                       + '"ладно"' + " тоже:\n"
-                       "https://discordapp.com/oauth2/authorize?client_id="
-                       f"{self.bot.app_info.id}&scope=bot&permissions=8"
+        await ctx.send("Это моя пригласительная ссылка чтобы Вы могли считать " + '"ладно"' + " тоже:\n"
+                       f"https://discordapp.com/oauth2/authorize?client_id={self.bot.app_info.id}"
+                       "&scope=bot&permissions=8\n"
                        "**Примечание:** Сейчас вы не можете пригласить бота, "  # TODO Добавить проверку на публик бота
                        "датабаза слишком маленькая чтобы уместить там больше "
                        "одного маленького сервера\n"

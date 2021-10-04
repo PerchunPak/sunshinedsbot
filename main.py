@@ -68,14 +68,14 @@ async def on_ready():
     await create_pool()
 
     print('\nЗашел как:\n'
-         f'{bot.user}\n'
-         f'{bot.user.id}\n'
+          f'{bot.user}\n'
+          f'{bot.user.id}\n'
           '-----------------\n'
-         f'{datetime.now().strftime("%X %d.%m.%Y")}\n'
+          f'{datetime.now().strftime("%X %d.%m.%Y")}\n'
           '-----------------\n'
-         f'Шардов: {str(bot.shard_count)}\n'
-         f'Серверов: {str(len(bot.guilds))}\n'
-         f'Пользователей: {str(len(bot.users))}\n'
+          f'Шардов: {str(bot.shard_count)}\n'
+          f'Серверов: {str(len(bot.guilds))}\n'
+          f'Пользователей: {str(len(bot.users))}\n'
           '-----------------')
 
     update_db.start()
@@ -84,7 +84,7 @@ async def on_ready():
     bot.app_info = await bot.application_info()
 
     await bot.change_presence(status=Status.online, activity=Activity(
-        name=f'кто сколько раз сказал "ладно"', type=ActivityType.competing))
+        name='кто сколько раз сказал "ладно"', type=ActivityType.competing))
 
 
 @bot.event

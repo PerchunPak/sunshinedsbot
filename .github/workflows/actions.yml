@@ -5,39 +5,26 @@ name: Run Tests
 on: [ push, pull_request, release ]
 
 jobs:
-  test:
+  lint:
 
     runs-on: ubuntu-latest
 
-    strategy:
-      matrix:
-        python-version: [3.6, 3.7, 3.8, 3.9, 3.10-dev]
-
     steps:
     - uses: actions/checkout@v2
-    - name: Set up Python ${{ matrix.python-version }}
+    - name: Set up Python
       uses: actions/setup-python@v2
       with:
-        python-version: ${{ matrix.python-version }}
-    - name: Install dependencies
+        python-version: 3.9
+    - name: Install flake8
       run: |
         python -m pip install --upgrade pip
-        pip install flake8 pylint # pytest
-        if [ -f requirements.txt ]; then pip install -r requirements.txt; fi
+        pip install -Ur tests_requirements.txt
     - name: Lint with flake8
       run: |
         # крашит билд если есть ошибки синтаксиса или не обьявленные переменные
-        flake8 . --count --select=E9,F63,F7,F82 --show-source --statistics
+        flake8 . --exclude .*,__*__,venv --count --select=E9,F63,F7,F82 --show-source
         # exit-zero переводит все ошибки в предупреждения. Редактор GitHub 127 символов в ширину
-        flake8 . --count --exit-zero --max-complexity=10 --max-line-length=127 --statistics
-    # Линтим также через PyLint потому что он лучше обнаруживает предупреждения,
-    # но крашит тест при любой ошибке, поэтому --exit-zero необходим.
-    # Также он не работает нормально с discord.py из за различий в импорте (inport discord)
-    - name: Lint with PyLint
-      run: pylint `ls -R|grep .py$|xargs` --exit-zero
-    #- name: Test with pytest
-    #  run: pytest
-
+        flake8 . --exclude .*,__*__,venv --count --exit-zero --max-complexity=10 --max-line-length=127 --ignore=E70
   deploy:
     needs: test
     if: |
